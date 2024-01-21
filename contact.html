@@ -130,7 +130,8 @@
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="d-flex flex-column justify-content-between h-100">
                         <div class="bg-light d-flex align-items-center w-100 p-4 mb-4">
-                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark" style="width: 55px; height: 55px;">
+                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark"
+                                style="width: 55px; height: 55px;">
                                 <i class="fa fa-map-marker-alt text-primary"></i>
                             </div>
                             <div class="ms-4">
@@ -139,28 +140,30 @@
                             </div>
                         </div>
                         <div class="bg-light d-flex align-items-center w-100 p-4 mb-4">
-                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark" style="width: 55px; height: 55px;">
+                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark"
+                                style="width: 55px; height: 55px;">
                                 <i class="fa fa-phone-alt text-primary"></i>
                             </div>
                             <div class="ms-4">
                                 <p class="mb-2">Обадете ни се</p>
-                                <a href = "tel:+359877850650">0877850650</a>
+                                <a href="tel:+359877850650">0877850650</a>
                             </div>
                         </div>
                         <div class="bg-light d-flex align-items-center w-100 p-4">
-                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark" style="width: 55px; height: 55px;">
+                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-dark"
+                                style="width: 55px; height: 55px;">
                                 <i class="fa fa-envelope-open text-primary"></i>
                             </div>
                             <div class="ms-4">
                                 <p>Изпратете ни имейл</p>
-                                <a href = "mailto: next-level-company@gmail.com">next-level-company@gmail.com</a>
+                                <a href="mailto: next-level-company@gmail.com">next-level-company@gmail.com</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Appointment Start -->
-    
-            
+
+
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="row g-3">
                         <div class="col-12 col-sm-6">
@@ -175,29 +178,19 @@
                             <input type="text" id="phone_number" class="form-control" placeholder="Телефонен номер"
                                 style="height: 55px;" required>
                         </div>
-                        <div class="col-12 col-sm-6">
-                            <select class="form-select" id="service" style="height: 55px;">
-                                <option value="Не е посочил">Избери услуга</option>
-                                <option value="Почистване">Почистване</option>
-                                <option value="Ремонт">Ремонт</option>
-                            </select>
-                        </div>
-                        <div style="position: relative;">
-                            <div class="date" id="date" data-target-input="nearest">
-                                <input type="text" id="dateInput" class="form-control datetimepicker-input"
-                                    placeholder="Избери дата" data-target="#date" data-toggle="datetimepicker"
-                                    style="height: 55px;">
-                            </div>
-                        </div>
 
 
-                        <div style="position: relative;">
-                            <div class="time" id="time" data-target-input="nearest">
-                                <input type="text" id="hour" class="form-control datetimepicker-input"
-                                    placeholder="Избери час" data-target="#time" data-toggle="datetimepicker"
-                                    style="height: 55px;">
-                            </div>
-                        </div>
+                        <style>
+                            /* Добавете стилове, ако е необходимо */
+                            #sendButton:disabled {
+                                cursor: not-allowed;
+                            }
+                    
+                            #sendButton.sending {
+                                background-color: gray;
+                                cursor: not-allowed;
+                            }
+                        </style>
 
 
                         <div class="col-12">
@@ -205,7 +198,7 @@
                                 required></textarea>
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary w-100 py-3" type="button"
+                            <button id="sendButton" class="btn btn-primary w-100 py-3" type="button"
                                 onclick="SendMail()">Изпрати</button>
                         </div>
                     </div>
@@ -227,7 +220,7 @@
                 </div>
                 <div class="modal-body">
                     Благодарим ви за запитването! При първа възможност нашият екип ще се свърже с вас, на посоченият от
-                    вас телефон/email!
+                    вас телефон и ще отговори на въпросите ви!
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
@@ -271,48 +264,41 @@
             return true;
         }
 
-
-
         function SendMail() {
             // Валидация на формата
             if (!validateForm()) {
                 return;
             }
+
+            // Блокиране на бутона и промяна на стиловете по време на изпращането
+            var sendButton = $('#sendButton');
+            sendButton.prop('disabled', true);
+            sendButton.addClass('sending');
+
             // Събиране на данни от формата
             var params = {
                 from_name: document.getElementById("name").value,
                 email_id: document.getElementById("email").value,
                 phone_number: document.getElementById("phone_number").value,
-                message: document.getElementById("message").value,
-                date: document.getElementById("dateInput").value,
-                hour: document.getElementById("hour").value,
-                service: document.getElementById("service").value
+                message: document.getElementById("message").value
             }
-
-            // Проверка за валидност на service елемента
-            var serviceElement = document.getElementById('service');
-            if (!serviceElement) {
-                console.error('service елементът не е намерен.');
-                return;
-            }
-
-            // Добавяне на информация за избраната услуга
-            params.serviceText = params.service;
 
             // Изпращане на имейл
             emailjs.send("service_p8xn78g", "template_ari2q2l", params).then(function (res) {
                 // Показване на модалния прозорец при успешно изпращане
+
+                // Връщане на нормалния вид на бутона след успешно изпращане
+                sendButton.prop('disabled', false);
+                sendButton.removeClass('sending');
+
                 $('#myModal').modal('show');
-            })
+            });
         }
 
         // Затваряне на модалния прозорец при натискане на бутона "Затвори"
         $('#myModal').on('hidden.bs.modal', function () {
             // Изчистване на формата или извършване на друга логика, ако е необходимо
         });
-
-
-
 
     </script>
 
@@ -331,7 +317,7 @@
 
     <!-- Google Map Start -->
     <div class="container-xxl pt-5 px-0 wow fadeIn" data-wow-delay="0.1s">
-        
+
     </div>
     <!-- Google Map End -->
 
