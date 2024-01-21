@@ -52,7 +52,7 @@
         format: 'L'
     });
     $('.time').datetimepicker({
-        format: 'LT'
+        format: 'HH:mm'
     });
 
 
