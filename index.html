@@ -587,13 +587,14 @@
      Team End -->
 
 
-    <!-- Appointment Start -->
+    <!-- Запазването на часовете -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <h4 class="section-title">Запитване</h4>
-                    <h1 class="display-5 mb-4">Направи запитване за час или заяви безплатен оглед</h1>
+                    <h4 class="section-title">Запазване на час</h4>
+                    <h1 class="display-5 mb-4">Запазете си час за оглед, почистване или ремонт на вашият дом, офис, или
+                        градина!</h1>
                     <p class="mb-4">След като попълните нашата кратка форма с вашите изисквания, ние ще се свържем с вас
                         на предоставения от вас номер.</p>
                     <div class="row g-4">
@@ -662,12 +663,27 @@
                         </div>
 
 
+
+                        <style>
+                            /* Добавете стилове, ако е необходимо */
+                            #sendButton:disabled {
+                                cursor: not-allowed;
+                            }
+
+                            #sendButton.sending {
+                                background-color: gray;
+                                cursor: not-allowed;
+                            }
+                        </style>
+
+
+
                         <div class="col-12">
-                            <textarea class="form-control" id="message" rows="5" placeholder="Вашето съобщение"
+                            <textarea class="form-control" id="message" rows="2" placeholder="Вашият адрес"
                                 required></textarea>
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary w-100 py-3" type="button"
+                            <button id="sendButton" class="btn btn-primary w-100 py-3" type="button"
                                 onclick="SendMail()">Изпрати</button>
                         </div>
                     </div>
@@ -675,6 +691,19 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -688,8 +717,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Благодарим ви за запитването! При първа възможност нашият екип ще се свърже с вас, на посоченият от
-                    вас телефон/email!
+                    Благодарим ви за доверието! При първа възможност нашият екип ще се свърже с вас, на посоченият от
+                    вас телефон, за да потвърди вашият час!
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
@@ -740,6 +769,12 @@
             if (!validateForm()) {
                 return;
             }
+
+            // Блокиране на бутона и промяна на стиловете по време на изпращането
+            var sendButton = $('#sendButton');
+            sendButton.prop('disabled', true);
+            sendButton.addClass('sending');
+
             // Събиране на данни от формата
             var params = {
                 from_name: document.getElementById("name").value,
@@ -764,8 +799,13 @@
             // Изпращане на имейл
             emailjs.send("service_p8xn78g", "template_ari2q2l", params).then(function (res) {
                 // Показване на модалния прозорец при успешно изпращане
+
+                // Връщане на нормалния вид на бутона след успешно изпращане
+                sendButton.prop('disabled', false);
+                sendButton.removeClass('sending');
+
                 $('#myModal').modal('show');
-            })
+            });
         }
 
         // Затваряне на модалния прозорец при натискане на бутона "Затвори"
@@ -788,7 +828,7 @@
 
 
 
-    <!-- Appointment End -->
+    <!-- Край на запазването на часовете -->
 
 
 
@@ -796,86 +836,84 @@
 
     <!-----  код за бутона на звънене  ----->
 
-<style>
+    <style>
+        #sticky-circle {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background-color: #B78D65;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: bottom 0.3s ease-in-out;
+        }
 
-    #sticky-circle {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        width: 48px;
-        height: 48px;
-        background-color: #B78D65;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1000;
-        transition: bottom 0.3s ease-in-out;
-      }
-  
-      #info-popup {
-        display: none;
-        position: fixed;
-        bottom: 180px;
-        right: 20px;
-        padding: 10px;
-        background-color: white;
-        color: black;
-        border-radius: 5px;
-        z-index: 1000;
-      }
-  
-      .call-button {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 48px;
-        height: 48px;
-        background-color: #3498db;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1000;
-        transition: bottom 0.3s ease-in-out;
-      }
-  
-      .call-button.show {
-        bottom: 100px;
-      }
+        #info-popup {
+            display: none;
+            position: fixed;
+            bottom: 180px;
+            right: 20px;
+            padding: 10px;
+            background-color: white;
+            color: black;
+            border-radius: 5px;
+            z-index: 1000;
+        }
 
-      </style>
+        .call-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: bottom 0.3s ease-in-out;
+        }
+
+        .call-button.show {
+            bottom: 100px;
+        }
+    </style>
 
     <div id="sticky-circle" onclick="showInfoPopup()">
-  <span>&#9742;</span>
-</div>
+        <span>&#9742;</span>
+    </div>
 
-<div id="info-popup">
-  <p>Обадете се сега:</p>
-  <p>Телефон: <a href="tel:+359877850650">0877850650</a></p>
-</div>
-      
-      
-    
+    <div id="info-popup">
+        <p>Обадете се сега:</p>
+        <p>Телефон: <a href="tel:+359877850650">0877850650</a></p>
+    </div>
+
+
+
     <script>
-  $(window).scroll(function () {
-    var scrollPosition = $(this).scrollTop();
+        $(window).scroll(function () {
+            var scrollPosition = $(this).scrollTop();
 
-    if (scrollPosition > 300) {
-      $('#sticky-circle').css('bottom', '100px');
-    } else {
-      $('#sticky-circle').css('bottom', '30px');
-    }
-  });
+            if (scrollPosition > 300) {
+                $('#sticky-circle').css('bottom', '100px');
+            } else {
+                $('#sticky-circle').css('bottom', '30px');
+            }
+        });
 
-  function showInfoPopup() {
-    var popup = document.getElementById("info-popup");
-    popup.style.display = (popup.style.display === "none" || popup.style.display === "") ? "block" : "none";
-  }
+        function showInfoPopup() {
+            var popup = document.getElementById("info-popup");
+            popup.style.display = (popup.style.display === "none" || popup.style.display === "") ? "block" : "none";
+        }
     </script>
 
 
@@ -890,7 +928,7 @@
 
 
 
-    
+
 
 
 
