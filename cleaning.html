@@ -184,7 +184,7 @@
                             <h3 class="mb-3">Градина</h3>
                             <p class="mb-4">Преобразете вашия външен район с нашите градински ремонтни услуги! Създаваме
                                 уникални и функционални пространства, където природата се слива с комфорта.</p>
-                            <a class="btn" href="#garden" onclick="animation()"><i
+                            <a class="btn" href="#prices" onclick="animation()" onclick="scrollToElement()"><i
                                     class="fa fa-plus text-primary me-3"></i>Цени</a>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
 
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h4 class="section-title">Цени</h4>
+            <h4 id="prices" class="section-title">Цени</h4>
         </div>
 
         <!-- Таблица на цени -->
@@ -243,7 +243,7 @@
             #garden {
                 scale: 1.0;
                 /* Начален мащаб (заменете с вашето начално значение) */
-                
+
                 transition: scale 0.5s, background-color 2.5s, color 2.5s;
             }
 
@@ -296,7 +296,7 @@
 
 
 
-            <!-- начало на скрипта за препращане на точния ред -->
+        <!-- начало на скрипта за препращане на точния ред -->
 
         <script>
             function animation() {
@@ -310,11 +310,23 @@
 
 
 
-                
+
+            }
+
+            function scrollToElement() {
+                var gardenElement = document.getElementById('garden');
+                var yOffset = window.innerWidth < 600 ? window.innerHeight / 2 : 0; // Проверка за ширина на прозореца, подходяща за мобилни устройства
+
+                if (gardenElement) {
+                    window.scrollTo({
+                        top: gardenElement.offsetTop - yOffset,
+                        behavior: 'smooth'
+                    });
+                }
             }
         </script>
 
-            <!-- край на скрипта за препращане на точния ред -->
+        <!-- край на скрипта за препращане на точния ред -->
 
 
         <!-- край на таблица на цени -->
